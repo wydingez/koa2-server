@@ -6,6 +6,8 @@ node_modules
 /tests/e2e/screenshots/
 /tests/**/coverage/
 
+/uploa-temp/*
+
 # local env files
 .env.local
 .env.*.local
