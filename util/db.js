@@ -1,11 +1,11 @@
 const mongoose = require('mongoose'),
       schema = require('./schema')
 
-const HOST = 'localhost'
+const HOST = '47.103.64.78'
 const DB_NAME = 'kao2-vue'
 const PORT = 27017
 
-const db_setting = `mongodb://${HOST}:${PORT}/${DB_NAME}`
+const db_setting = `mongodb://admin:1994429@${HOST}:${PORT}/${DB_NAME}`
 
 class db {
   static getInstance () {
@@ -25,7 +25,10 @@ class db {
   connect () {
     return new Promise((resolve, reject) => {
       if (!this.client) {
-        this.client = mongoose.connect(db_setting, {useNewUrlParser: true})
+        this.client = mongoose.connect(db_setting, {
+          useNewUrlParser: true,
+          authSource: 'admin'
+        })
 
         // connect success
         mongoose.connection.on('connected', () => {
