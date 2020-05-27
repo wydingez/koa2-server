@@ -8,6 +8,7 @@ const logger = require('koa-logger')
 const session = require('koa-session2')
 const parameter = require('koa-parameter')
 const config = require('./config')
+const koajwt = require('koa-jwt')
 
 const Store = require('./util/store')
 const routing = require('./routers')
@@ -26,6 +27,11 @@ app.use(require('koa-static')(__dirname + '/public'))
 app.use(session({
   key: config.name,
   store: new Store()
+}))
+app.use(koajwt({
+  secret: config.tokenSecret
+}).unless({
+  path: [/\/user\/login/]
 }))
 
 app.use(views(__dirname + '/views', {
