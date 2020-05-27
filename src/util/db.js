@@ -1,20 +1,8 @@
-const mongoose = require('mongoose'),
-      schema = require('./schema')
-
-const HOST = '47.103.64.78'
-const DB_NAME = 'kao2-vue'
-const PORT = 27017
-
-const db_setting = `mongodb://admin:1994429@${HOST}:${PORT}/${DB_NAME}`
+const mongoose = require('mongoose')
+const schema = require('../models')
+const config = require('../config')
 
 class db {
-  static getInstance () {
-    if (!this.instance) {
-      this.instance = new db()
-    }
-    return this.instance
-  }
-
   constructor () {
     if (!this.client) {
       this.client = ''
@@ -25,14 +13,14 @@ class db {
   connect () {
     return new Promise((resolve, reject) => {
       if (!this.client) {
-        this.client = mongoose.connect(db_setting, {
+        this.client = mongoose.connect(config.mongodb, {
           useNewUrlParser: true,
           authSource: 'admin'
         })
 
         // connect success
         mongoose.connection.on('connected', () => {
-          console.log(`Mongoose connected on ${db_setting}`)
+          console.log(`Mongodb connect success: ${config.mongodb}`)
           resolve(this.client)
         })
 

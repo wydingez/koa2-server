@@ -5,13 +5,16 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
+const session = require('koa-session2')
+const parameter = require('koa-parameter')
+const config = require('./config')
 
-const index = require('./routes/index')
-const users = require('./routes/users')
-const file = require('./routes/file')
+const Store = require('./util/store')
+const routing = require('./routers')
 
 // error handler
 onerror(app)
+parameter(app)
 
 // middlewares
 app.use(bodyparser({
@@ -20,6 +23,10 @@ app.use(bodyparser({
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
+app.use(session({
+  key: config.name,
+  store: new Store()
+}))
 
 app.use(views(__dirname + '/views', {
   extension: 'pug'
@@ -33,14 +40,11 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
-// routes
-app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
-app.use(file.routes(), file.allowedMethods())
-
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
 });
+
+routing(app)
 
 module.exports = app
