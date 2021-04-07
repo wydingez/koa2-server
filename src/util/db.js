@@ -20,13 +20,15 @@ class db {
 
         // connect success
         mongoose.connection.on('connected', () => {
-          console.log(`Mongodb connect success: ${config.mongodb}`)
+          console.log('\n<------------------- Mongoose connected ------------------->')
+          console.log(`Mongodb connect success: ${config.mongodb}\n`)
           resolve(this.client)
         })
 
         // connect disconnected
         mongoose.connection.on('disconnected', (err) => {
-          console.log(`Mongoose disconnected`)
+          console.log('\n<------------------- Mongoose disconnected ------------------->')
+          console.log(`Mongoose disconnected\n`)
           reject(err)
         })
       } else {

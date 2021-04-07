@@ -9,6 +9,7 @@ const session = require('koa-session2')
 const parameter = require('koa-parameter')
 const config = require('./config')
 const koajwt = require('koa-jwt')
+const koaBody = require('koa-body')
 
 const Store = require('./util/store')
 const routing = require('./routers')
@@ -21,18 +22,36 @@ parameter(app)
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
+
+// json
 app.use(json())
+
+// logger
 app.use(logger())
+
+// static
 app.use(require('koa-static')(__dirname + '/public'))
+
+// session
 app.use(session({
   key: config.name,
   store: new Store()
 }))
-app.use(koajwt({
-  secret: config.tokenSecret
-}).unless({
-  path: [/\/user\/login/]
+
+// koa-body
+app.use(koaBody({
+  multipart: true,
+  formidable: {
+    maxFileSize: 20 * 1024 * 1024
+  }
 }))
+
+// jwt
+// app.use(koajwt({
+//   secret: config.tokenSecret
+// }).unless({
+//   path: [/\/user\/login/]
+// }))
 
 app.use(views(__dirname + '/views', {
   extension: 'pug'

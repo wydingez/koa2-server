@@ -7,7 +7,8 @@ class RedisStroe extends session.Store {
     super()
     this.redis = new Redis(config.redis)
     this.redis.on('connect', () => {
-      console.log(`Redis connect success: ${config.redis}`)
+      console.log('\n<------------------- Redis connect ------------------->')
+      console.log(`Redis connect success: ${config.redis}\n`)
     })
   }
 
