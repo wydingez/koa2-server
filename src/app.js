@@ -11,6 +11,9 @@ const config = require('./config')
 const koajwt = require('koa-jwt')
 const koaBody = require('koa-body')
 
+const { createProxyMiddleware } = require('http-proxy-middleware');
+const k2c = require('koa2-connect');
+
 const Store = require('./util/store')
 const routing = require('./routers')
 
@@ -45,6 +48,25 @@ app.use(koaBody({
     maxFileSize: 20 * 1024 * 1024
   }
 }))
+
+// jsonplaceholder proxy
+app.use(async (ctx, next) => {
+  const url = ctx.path;
+  if (url.startsWith('/jp')) {
+    ctx.respond = false;
+    await k2c(
+      createProxyMiddleware({
+        target: 'https://jsonplaceholder.typicode.com',
+        changeOrigin: true,
+        pathRewrite: {
+          '/jp': '/'
+        },
+        secure: false,
+      }),
+    )(ctx, next);
+  }
+  return await next();
+});
 
 // jwt
 // app.use(koajwt({

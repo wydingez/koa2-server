@@ -36,6 +36,8 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "http-proxy-middleware": "^2.0.1",
+    "koa2-connect": "^1.0.2",
     "nodemon": "^1.19.1"
   }
 }
